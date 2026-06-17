@@ -39,6 +39,7 @@ const DEFAULT_ALLOWED_ORIGINS = [
   'http://127.0.0.1:4321',
   'https://neuralsync-ai.netlify.app',
   'https://laalquimiai.netlify.app',
+  'https://udeayudas.netlify.app',
 ];
 
 const extraOrigins = (import.meta.env.ALLOWED_ORIGINS ?? '')
