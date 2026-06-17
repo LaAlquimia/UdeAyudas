@@ -37,7 +37,6 @@ const MAX_MESSAGE_LENGTH = 4000;
 const DEFAULT_ALLOWED_ORIGINS = [
   'http://localhost:4321',
   'http://127.0.0.1:4321',
-  'https://neuralsync-ai.netlify.app',
   'https://laalquimiai.netlify.app',
   'https://udeayudas.netlify.app',
 ];
@@ -218,7 +217,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     // 6. Call OpenRouter. Use a configurable HTTP-Referer so analytics work
     //    in dev (localhost) and in prod (the Netlify URL).
-    const siteUrl = import.meta.env.PUBLIC_SITE_URL ?? 'https://neuralsync-ai.netlify.app';
+    const siteUrl = import.meta.env.PUBLIC_SITE_URL ?? 'https://udeayudas.netlify.app';
 
     const upstreamResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
@@ -226,14 +225,14 @@ export const POST: APIRoute = async ({ request }) => {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': siteUrl,
-        'X-Title': 'NeuralSync AI',
+        'X-Title': 'UdeAyudas',
       },
       body: JSON.stringify({
         model: selectedModel,
         messages: [
           {
             role: 'system',
-            content: 'Eres NeuralSync AI, un asistente inteligente y amigable. Respondes en español de forma clara y concisa.',
+            content: 'Eres UdeAyudas, un asistente amable y experto en los trámites y procesos universitarios de la Universidad de Antioquia (UdeA), en Medellín, Colombia. Tu objetivo es orientar a estudiantes, egresados, docentes y personal administrativo sobre procedimientos académicos y administrativos de la UdeA, tales como: matrícula académica, adiciones y cancelaciones de asignaturas, certificados y constancias, homologaciones, transferencias internas y externas, reingresos, calendario académico, becas y auxilios socioeconómicos, prácticas académicas y profesionales, opciones de grado (trabajo de grado, monografía, seminarios, prácticas, créditos de posgrado), grados, agendamiento de citas en dependencias como Admisiones y Registro, y canales de atención oficiales. Responde SIEMPRE en español, de forma clara, concisa y respetuosa. Cuando des un paso a paso, numéralos. Si no conoces un dato exacto o vigente (por ejemplo, una fecha de calendario de un semestre específico), indícalo y recomienda consultar el sitio oficial https://www.udea.edu.co o la dependencia correspondiente. No inventes requisitos ni procedimientos: si dudas, dilo y sugiere dónde confirmar. Cierra las respuestas complejas invitando al usuario a seguir preguntando.',
           },
           { role: 'user', content: message },
         ],

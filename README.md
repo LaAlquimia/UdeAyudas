@@ -1,8 +1,8 @@
-# NeuralSync AI
+# UdeAyudas
 
-> Agente de inteligencia artificial autónomo — Deploy Hackathon 2026
+> Asistente inteligente para los trámites y procesos universitarios de la **Universidad de Antioquia** (UdeA).
 
-Proyecto participante en la **Deploy Hackaton**. Una interfaz moderna con estética **liquid glass** que integra un chatbot potenciado por **OpenRouter AI**.
+UdeAyudas es una interfaz web con estética **liquid glass** que integra un chatbot potenciado por **OpenRouter AI** y está especializado en orientar a estudiantes, egresados, docentes y personal administrativo sobre los trámites y procedimientos académicos y administrativos más comunes de la UdeA: matrícula, certificados, homologaciones, calendario académico, becas, grados y más.
 
 ## 🚀 Stack
 
@@ -27,7 +27,7 @@ bun run preview      # Vista previa del build
 Crea un archivo `.env` en la raíz:
 
 ```env
-OPENROUTER_API_KEY=sk-or-v1-tu-key-aqui
+OPENROUTER_API_KEY=sk-or-...aqui
 ```
 
 Obtén tu API key en [openrouter.ai/keys](https://openrouter.ai/keys).
@@ -66,7 +66,7 @@ src/
 │   └── ChatBot.astro       # Cliente del chatbot
 ├── pages/
 │   ├── index.astro         # Landing page
-│   ├── chatbot.astro       # Página del chatbot
+│   ├── chatbot.astro       # Página del asistente
 │   └── api/chat.ts         # Endpoint SSR → OpenRouter
 └── styles/global.css       # Estilos globales + glassmorphism
 ```

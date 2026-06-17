@@ -1,6 +1,6 @@
 # AGENTS.md
 
-NeuralSync AI — Astro 6 SSR landing page + chatbot. Deployed to Netlify Functions.
+UdeAyudas — Astro 6 SSR landing page + chatbot that helps University of Antioquia (UdeA) students with university procedures. Deployed to Netlify Functions.
 
 ## Stack
 
@@ -23,8 +23,8 @@ There is **no test runner, no linter, and no formatter** configured. Don't run `
 ## Environment
 
 - Required: `OPENROUTER_API_KEY` in `.env` (copy `.env.example`). `src/pages/api/chat.ts` returns HTTP 500 with a Spanish error if it's missing — the server must be restarted after editing `.env`.
-- Optional: `PUBLIC_SITE_URL` — used as the `HTTP-Referer` header when calling OpenRouter. Defaults to `https://neuralsync-ai.netlify.app`; set to `http://localhost:4321` during local dev so OpenRouter analytics are accurate.
-- Optional: `ALLOWED_ORIGINS` — comma-separated list of extra origins allowed to POST `/api/chat`, on top of the built-in defaults (`http://localhost:4321`, `http://127.0.0.1:4321`, `https://neuralsync-ai.netlify.app`, `https://laalquimiai.netlify.app`). Use this when you deploy under a different Netlify subdomain or a custom domain — without it the API returns 403 `Origen no permitido`.
+- Optional: `PUBLIC_SITE_URL` — used as the `HTTP-Referer` header when calling OpenRouter. Defaults to `https://udeayudas.netlify.app`; set to `http://localhost:4321` during local dev so OpenRouter analytics are accurate.
+- Optional: `ALLOWED_ORIGINS` — comma-separated list of extra origins allowed to POST `/api/chat`, on top of the built-in defaults (`http://localhost:4321`, `http://127.0.0.1:4321`, `https://laalquimiai.netlify.app`, `https://udeayudas.netlify.app`). Use this when you deploy under a different Netlify subdomain or a custom domain — without it the API returns 403 `Origen no permitido`.
 - `package.json` declares `engines.node >= 22.12.0`.
 - Generated `.astro/` (Astro types), `dist/` (build output), `.netlify/` (local Netlify state), and `node_modules/` are gitignored — never commit them.
 

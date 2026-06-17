@@ -10,7 +10,7 @@ export interface Props {
   hideFooter?: boolean;
 }
 
-const { title = 'NeuralSync AI — Hackathon 2026', description = 'AI Agent project for the Deploy Hackathon', currentPath = '', fullHeight = false, hideFooter = false } = Astro.props;
+const { title = 'UdeAyudas — Asistente de trámites UdeA', description = 'UdeAyudas: agente que te ayuda con los trámites y procesos universitarios de la Universidad de Antioquia', currentPath = '', fullHeight = false, hideFooter = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -41,10 +41,10 @@ const { title = 'NeuralSync AI — Hackathon 2026', description = 'AI Agent proj
     </div>
 
     <nav class="nav">
-      <a href="/" class="nav-brand">🤖 NeuralSync AI</a>
+      <a href="/" class="nav-brand">🎓 UdeAyudas</a>
       <ul class="nav-links">
-        <li><a href="/" class={currentPath === '/' ? 'active' : ''}>Proyecto</a></li>
-        <li><a href="/chatbot" class={currentPath === '/chatbot' ? 'active' : ''}>Chatbot</a></li>
+        <li><a href="/" class={currentPath === '/' ? 'active' : ''}>Inicio</a></li>
+        <li><a href="/chatbot" class={currentPath === '/chatbot' ? 'active' : ''}>Asistente</a></li>
       </ul>
       <ThemeToggle />
     </nav>
@@ -56,7 +56,7 @@ const { title = 'NeuralSync AI — Hackathon 2026', description = 'AI Agent proj
     {!hideFooter && (
       <footer class="footer">
         <div class="container">
-          <p>NeuralSync AI &mdash; Hackathon 2026.</p>
+          <p>UdeAyudas &mdash; Tu asistente para los trámites de la Universidad de Antioquia.</p>
         </div>
       </footer>
     )}
