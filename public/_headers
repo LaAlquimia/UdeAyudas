@@ -1,0 +1,22 @@
+# Netlify headers for static assets. SSR responses get the same headers from
+# src/middleware.ts; this file covers everything served straight from /public.
+# https://docs.netlify.com/routing/headers/
+
+# Caching policy for the favicon — 1 year, immutable, since the filename
+# doesn't change between deploys.
+/favicon.svg
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+/favicon.ico
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
+# Default security headers applied to every other static file. The CSP here
+# mirrors src/middleware.ts; if you change one, change both.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin

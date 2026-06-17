@@ -1,0 +1,84 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Hero from '../components/Hero.astro';
+import FeatureCard from '../components/FeatureCard.astro';
+import GlassCard from '../components/GlassCard.astro';
+---
+
+<Layout title="NeuralSync AI — Proyecto Hackathon 2026" description="Agente AI autónomo para la Deploy Hackaton" currentPath="/">
+  <Hero />
+
+  <div class="container">
+    <section class="section" id="features">
+      <h2 class="section-title">Características</h2>
+
+      <div class="features">
+        <FeatureCard icon="🧠" title="IA Multi-Modelo">
+          Integración con los mejores modelos de lenguaje vía OpenRouter. Elige el modelo ideal para cada tarea.
+        </FeatureCard>
+
+        <FeatureCard icon="⚡" title="Respuestas en Tiempo Real">
+          Procesamiento de lenguaje natural con respuestas rápidas y contextuales. Conversaciones fluidas y naturales.
+        </FeatureCard>
+
+        <FeatureCard icon="🔒" title="Privacidad Total">
+          Arquitectura segura con API keys cifradas. Tus datos no se almacenan ni comparten con terceros.
+        </FeatureCard>
+
+        <FeatureCard icon="🎨" title="Interfaz Glass">
+          Diseño líquido y transparente con efecto glassmorphism. Tema oscuro y claro seleccionable.
+        </FeatureCard>
+
+        <FeatureCard icon="🌐" title="Desplegado en Netlify">
+          Infraestructura serverless moderna con despliegue continuo. Rápido, escalable y confiable.
+        </FeatureCard>
+
+        <FeatureCard icon="🚀" title="Hackathon Ready">
+          Proyecto preparado para competir. Código limpio, documentado y optimizado para presentación.
+        </FeatureCard>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Tech Stack</h2>
+
+      <div class="features" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))">
+        <GlassCard class="feature-card" style="text-align:center">
+          <div class="feature-icon">🟡</div>
+          <h3>Astro 6</h3>
+          <p>Framework web moderno con islas de interactividad</p>
+        </GlassCard>
+
+        <GlassCard class="feature-card" style="text-align:center">
+          <div class="feature-icon">🟣</div>
+          <h3>OpenRouter</h3>
+          <p>API unificada para múltiples modelos de IA</p>
+        </GlassCard>
+
+        <GlassCard class="feature-card" style="text-align:center">
+          <div class="feature-icon">🔵</div>
+          <h3>Netlify</h3>
+          <p>Deploy serverless con Functions y SSR</p>
+        </GlassCard>
+
+        <GlassCard class="feature-card" style="text-align:center">
+          <div class="feature-icon">🟤</div>
+          <h3>Bun</h3>
+          <p>Runtime y package manager ultrarrápido</p>
+        </GlassCard>
+      </div>
+    </section>
+
+    <section class="section" style="text-align:center; padding-bottom:4rem">
+      <GlassCard style="display:inline-block; padding:2rem 3rem; max-width:600px; margin:0 auto">
+        <h2 class="section-title" style="font-size:1.8rem">¿Listo para probarlo?</h2>
+        <p style="margin-bottom:1.5rem; color:var(--text-secondary)">
+          El asistente ya está funcionando. Hazle cualquier pregunta.
+        </p>
+        <a href="/chatbot" class="glass-btn accent">
+          Abrir Chatbot →
+        </a>
+      </GlassCard>
+    </section>
+  </div>
+</Layout>

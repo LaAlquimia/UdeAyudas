@@ -1,0 +1,64 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  currentPath?: string;
+  fullHeight?: boolean;
+  hideFooter?: boolean;
+}
+
+const { title = 'NeuralSync AI — Hackathon 2026', description = 'AI Agent project for the Deploy Hackathon', currentPath = '', fullHeight = false, hideFooter = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <script is:inline>
+      (function () {
+        var html = document.documentElement;
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        html.setAttribute('data-theme', saved || (prefersDark ? 'dark' : 'light'));
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="animated-bg">
+      <div class="orb"></div>
+      <div class="orb"></div>
+      <div class="orb"></div>
+    </div>
+
+    <nav class="nav">
+      <a href="/" class="nav-brand">🤖 NeuralSync AI</a>
+      <ul class="nav-links">
+        <li><a href="/" class={currentPath === '/' ? 'active' : ''}>Proyecto</a></li>
+        <li><a href="/chatbot" class={currentPath === '/chatbot' ? 'active' : ''}>Chatbot</a></li>
+      </ul>
+      <ThemeToggle />
+    </nav>
+
+    <main class="main-content" data-full-height={fullHeight ? '' : undefined}>
+      <slot />
+    </main>
+
+    {!hideFooter && (
+      <footer class="footer">
+        <div class="container">
+          <p>NeuralSync AI &mdash; Hackathon 2026.</p>
+        </div>
+      </footer>
+    )}
+  </body>
+</html>

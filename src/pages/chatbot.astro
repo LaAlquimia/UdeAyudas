@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ChatBot from '../components/ChatBot.astro';
+---
+
+<Layout title="NeuralSync AI — Chatbot" description="Chatea con el asistente AI de NeuralSync" currentPath="/chatbot" fullHeight={true} hideFooter={true}>
+  <div class="chat-page">
+    <ChatBot />
+  </div>
+</Layout>
+
+<style is:global>
+  body {
+    overflow: hidden;
+  }
+</style>
