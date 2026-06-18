@@ -25,34 +25,4 @@ import TransitionOverlay from '../components/TransitionOverlay.astro';
   <TransitionOverlay />
 </BaseLayout>
 
-<script>
-  // Intersection Observer for scroll reveals
-  const revealElements = document.querySelectorAll('.reveal');
-  
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, {
-    root: null,
-    threshold: 0.1,
-    rootMargin: "0px 0px -50px 0px"
-  });
 
-  revealElements.forEach(el => observer.observe(el));
-</script>
-
-<style is:global>
-  .reveal {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  }
-  .reveal.revealed {
-    opacity: 1;
-    transform: translateY(0);
-  }
-</style>
