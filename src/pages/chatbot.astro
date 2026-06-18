@@ -114,6 +114,21 @@ import BaseLayout from '../layouts/Base.astro';
           <button class="ctx-change mono" id="ctx-change">Cambiar</button>
         </div>
 
+        <!-- Provider selector (always visible — user picks the engine explicitly) -->
+        <div class="provider-bar" role="tablist" aria-label="Motor de IA">
+          <span class="provider-label mono">Motor</span>
+          <button class="provider-pill" data-provider="openrouter" role="tab" aria-selected="false" type="button">
+            <span class="provider-dot" aria-hidden="true"></span>
+            <span class="provider-name">OpenRouter IA</span>
+            <span class="provider-sub mono">multi-modelo</span>
+          </button>
+          <button class="provider-pill is-active" data-provider="copiloto" role="tab" aria-selected="true" type="button">
+            <span class="provider-dot provider-dot--alt" aria-hidden="true"></span>
+            <span class="provider-name">Copiloto UdeA</span>
+            <span class="provider-sub mono">institucional · texto</span>
+          </button>
+        </div>
+
         <!-- Messages -->
         <div class="messages" id="messages">
           <div class="welcome" id="welcome">
@@ -426,6 +441,86 @@ import BaseLayout from '../layouts/Base.astro';
   }
   .ctx-change:hover { color: var(--ink); border-color: var(--line-strong); }
 
+  /* ── Provider selector ── */
+  .provider-bar {
+    display: flex; align-items: center; gap: .55rem;
+    padding: .55rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.45);
+    flex-shrink: 0;
+  }
+
+  .provider-label {
+    font-size: .58rem; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--muted);
+    font-weight: 600; padding-right: .15rem;
+  }
+
+  .provider-pill {
+    display: inline-flex; align-items: center; gap: .45rem;
+    background: white; border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: .32rem .75rem .32rem .55rem;
+    font-family: 'Replica','Inter',sans-serif;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .18s;
+    text-align: left;
+  }
+  .provider-pill:hover {
+    border-color: var(--line-strong);
+    color: var(--ink);
+  }
+
+  .provider-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--coral-500);
+    box-shadow: 0 0 0 2px rgba(229,92,50,.18);
+    flex-shrink: 0;
+  }
+  .provider-dot--alt {
+    background: var(--verified, #0F6E56);
+    box-shadow: 0 0 0 2px rgba(15,110,86,.18);
+  }
+
+  .provider-name {
+    font-size: .78rem; font-weight: 500; line-height: 1;
+  }
+  .provider-sub {
+    font-size: .56rem; opacity: .7; line-height: 1;
+  }
+
+  .provider-pill.is-active {
+    background: rgba(2,105,55,.10);
+    border-color: rgba(2,105,55,.45);
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(2,105,55,.10);
+  }
+  .provider-pill.is-active .provider-sub { opacity: .85; }
+
+  .provider-pill:focus-visible {
+    outline: 2px solid var(--coral-400);
+    outline-offset: 2px;
+  }
+
+  /* Engine badge shown under each assistant message so the user always knows
+     which provider generated the answer. */
+  :global(.msg-engine) {
+    display: inline-flex; align-items: center; gap: .3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .55rem; color: var(--muted);
+    padding: .1rem .45rem; border-radius: 4px;
+    background: rgba(0,0,0,.03); border: 1px solid var(--line);
+  }
+  :global(.msg-engine--copiloto) {
+    color: #0F6E56; background: rgba(15,110,86,.07);
+    border-color: rgba(15,110,86,.22);
+  }
+  :global(.msg-engine--openrouter) {
+    color: var(--coral-600); background: rgba(229,92,50,.07);
+    border-color: rgba(229,92,50,.22);
+  }
+
   /* ── Messages ── */
   .messages {
     flex: 1; overflow-y: auto; padding: 1.5rem;
@@ -467,6 +562,11 @@ import BaseLayout from '../layouts/Base.astro';
     border-radius: 14px 14px 14px 4px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
   }
   :global(.msg-meta) { font-family: 'JetBrains Mono', monospace; font-size: .57rem; color: var(--muted); }
+
+  :global(.msg-meta-row) {
+    display: inline-flex; align-items: center; gap: .4rem;
+    flex-wrap: wrap;
+  }
 
   :global(.citation) {
     display: inline-flex; align-items: center; gap: .3rem;
@@ -596,6 +696,26 @@ const DEFAULT_BG = '#EBF7E8';
 const DEFAULT_DOT: [number,number,number] = [67, 182, 73]; /* Pantone 361 C — más visible sobre fondo claro */
 
 const state = { university: '', abbr: '', role: '', color: '', bg: '' };
+
+// ── Provider state (explicit user selection, persisted in localStorage) ─────
+const PROVIDER_STORAGE_KEY = 'chatProvider';
+const DEFAULT_PROVIDER = 'copiloto';
+const VALID_PROVIDERS = new Set(['openrouter', 'copiloto']);
+let activeProvider: string = DEFAULT_PROVIDER;
+
+function loadProvider(): string {
+  try {
+    const stored = localStorage.getItem(PROVIDER_STORAGE_KEY);
+    if (stored && VALID_PROVIDERS.has(stored)) return stored;
+  } catch {
+    // localStorage may throw in private modes / sandboxed iframes — fall through.
+  }
+  return DEFAULT_PROVIDER;
+}
+
+function saveProvider(p: string): void {
+  try { localStorage.setItem(PROVIDER_STORAGE_KEY, p); } catch { /* ignore */ }
+}
 
 // ── Canvas dot color (lerped toward target) ──
 let dotR = DEFAULT_DOT[0], dotG = DEFAULT_DOT[1], dotB = DEFAULT_DOT[2];
@@ -787,6 +907,30 @@ document.querySelectorAll<HTMLButtonElement>('.q-chip').forEach(c => {
   c.addEventListener('click', () => { inputEl.value = c.dataset.q || c.textContent || ''; go(); });
 });
 
+// ── Provider pill toggle ────────────────────────────────────────────────────
+const providerPills = document.querySelectorAll<HTMLButtonElement>('.provider-pill');
+
+function applyProviderUi(p: string) {
+  providerPills.forEach(btn => {
+    const isActive = btn.dataset.provider === p;
+    btn.classList.toggle('is-active', isActive);
+    btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+  });
+}
+
+providerPills.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const p = btn.dataset.provider || DEFAULT_PROVIDER;
+    if (!VALID_PROVIDERS.has(p) || p === activeProvider) return;
+    activeProvider = p;
+    saveProvider(p);
+    applyProviderUi(p);
+  });
+});
+
+activeProvider = loadProvider();
+applyProviderUi(activeProvider);
+
 function go() {
   const txt = inputEl.value.trim(); if (!txt) return;
   inputEl.value = ''; inputEl.style.height = 'auto'; send(txt);
@@ -802,9 +946,13 @@ async function send(txt: string) {
     `<div class="typing-indicator" id="${tid}"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`);
   scroll(); sendBtn.disabled = true;
 
-  const backendMessage = state.role 
-    ? `[El usuario indica que su rol es: ${state.role}. Ten esto en cuenta para responder.]\n\n${txt}` 
+  const backendMessage = state.role
+    ? `[El usuario indica que su rol es: ${state.role}. Ten esto en cuenta para responder.]\n\n${txt}`
     : txt;
+
+  // Snapshot the provider for this turn so a mid-flight toggle doesn't
+  // re-render the badge with the wrong engine name.
+  const providerUsed = activeProvider;
 
   try {
     const res = await fetch('/api/chat', {
@@ -814,7 +962,8 @@ async function send(txt: string) {
       },
       body: JSON.stringify({
         message: backendMessage,
-        model: 'openai/gpt-4o-mini' // default fallback model
+        model: 'openai/gpt-4o-mini', // ignored when provider=copiloto
+        provider: providerUsed,
       })
     });
 
@@ -827,24 +976,37 @@ async function send(txt: string) {
     const data = await res.json();
     let full = data.reply || '';
 
-    const div = addBubble('assistant', full);
+    const div = addBubble('assistant', full, providerUsed);
     history.push({ role: 'assistant', content: full });
-    
+
     // Add citation badge if any [Fuente: ...] found (just for style consistency)
     const m = full.match(/\[Fuente:[^\]]+\]/);
     if (m) div.insertAdjacentHTML('beforeend', `<span class="citation">✓ ${m[0].replace(/\[|\]/g, '')}</span>`);
   } catch (e: any) {
     document.getElementById(tid)?.remove();
-    addBubble('assistant', `⚠️ ${e.message || 'Error de conexión. Intenta de nuevo.'}`);
+    addBubble('assistant', `⚠️ ${e.message || 'Error de conexión. Intenta de nuevo.'}`, providerUsed);
   }
   sendBtn.disabled = false; scroll();
   inputEl.focus();
 }
 
-function addBubble(role: 'user' | 'assistant', text: string) {
+function addBubble(role: 'user' | 'assistant', text: string, provider?: string) {
   const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
   const div = document.createElement('div'); div.className = `msg ${role}`;
-  div.innerHTML = `<div class="msg-bubble">${role === 'assistant' ? renderMarkdown(text) : esc(text)}</div><span class="msg-meta">${role === 'user' ? 'Tú' : 'UdeAyudas'} · ${t}</span>`;
+
+  const meta =
+    role === 'user'
+      ? `<span class="msg-meta">Tú · ${t}</span>`
+      : `<span class="msg-meta">UdeAyudas · ${t}</span>`;
+
+  const engineBadge = role === 'assistant' && provider
+    ? `<span class="msg-engine msg-engine--${provider}">${provider === 'copiloto' ? 'Copiloto UdeA' : 'OpenRouter'}</span>`
+    : '';
+
+  div.innerHTML =
+    `<div class="msg-bubble">${role === 'assistant' ? renderMarkdown(text) : esc(text)}</div>` +
+    `<div class="msg-meta-row">${meta}${engineBadge}</div>`;
+
   msgsEl.appendChild(div); scroll(); return div;
 }
 

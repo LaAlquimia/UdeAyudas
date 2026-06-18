@@ -6,9 +6,19 @@ UdeAyudas — Astro 6 SSR landing page + chatbot that helps University of Antioq
 
 - Astro 6 (`output: 'server'`, `@astrojs/netlify` adapter — every route is SSR)
 - OpenRouter AI (`https://openrouter.ai/api/v1/chat/completions`)
+- Copiloto UdeA — LangGraph + FastAPI institucional (`POST https://copiloto-admin-udea.onrender.com/api/invoke`)
 - `marked` v18 (AI reply markdown rendering, client-side)
 - Bun (package manager + runtime; `bun.lock` is the lockfile)
 - TypeScript strict (`astro/tsconfigs/strict`)
+
+## Chat engines
+
+The chat exposes **two engines** the user picks explicitly from a pill selector at the top of the chat panel (persisted in `localStorage['chatProvider']`):
+
+- **`copiloto`** (default) — institutional. Forwards the user message verbatim to our LangGraph backend and returns its `generation` field. No auth, no system prompt (the upstream has its own router + corpus), no model selection, text-only. URL is `COPILOTO_API_URL` (default = Render deploy). 90s timeout (Render free tier cold starts ~30s).
+- **`openrouter`** — multi-model. Forwards the user message + a UdeA-specific system prompt to OpenRouter. Requires `OPENROUTER_API_KEY`. Model is allowlisted in `ALLOWED_MODELS` (`src/pages/api/chat.ts`) and currently hardcoded to `openai/gpt-4o-mini` on the client.
+
+`POST /api/chat` body: `{ message: string, provider: "openrouter" | "copiloto", model?: string }`. `model` is ignored when `provider === "copiloto"`. Each assistant bubble gets a small badge (`Copiloto UdeA` / `OpenRouter`) so the user always knows which engine answered.
 
 ## Commands
 
@@ -22,8 +32,9 @@ There is **no test runner, no linter, and no formatter** configured. Don't run `
 
 ## Environment
 
-- Required: `OPENROUTER_API_KEY` in `.env` (copy `.env.example`). `src/pages/api/chat.ts` returns HTTP 500 with a Spanish error if it's missing — the server must be restarted after editing `.env`.
+- Required (only for the OpenRouter engine): `OPENROUTER_API_KEY` in `.env` (copy `.env.example`). `src/pages/api/chat.ts` returns HTTP 500 with a Spanish error if it's missing — the server must be restarted after editing `.env`.
 - Optional: `PUBLIC_SITE_URL` — used as the `HTTP-Referer` header when calling OpenRouter. Defaults to `https://udeayudas.netlify.app`; set to `http://localhost:4321` during local dev so OpenRouter analytics are accurate.
+- Optional: `COPILOTO_API_URL` — URL of the LangGraph / FastAPI Copiloto Administrativo backend used by the `copiloto` chat engine. Defaults to `https://copiloto-admin-udea.onrender.com/api/invoke`; override to point at a local/staging deployment.
 - Optional: `ALLOWED_ORIGINS` — comma-separated list of extra origins allowed to POST `/api/chat`, on top of the built-in defaults (`http://localhost:4321`, `http://127.0.0.1:4321`, `https://laalquimiai.netlify.app`, `https://udeayudas.netlify.app`). Use this when you deploy under a different Netlify subdomain or a custom domain — without it the API returns 403 `Origen no permitido`.
 - `package.json` declares `engines.node >= 22.12.0`.
 - Generated `.astro/` (Astro types), `dist/` (build output), `.netlify/` (local Netlify state), and `node_modules/` are gitignored — never commit them.
@@ -51,6 +62,7 @@ All styling lives in `src/styles/global.css` (single file). `src/assets/` is emp
 - Don't add `prerender = true` to pages or API routes unless explicitly asked — the whole site is currently SSR and switching a page to prerendered breaks the dynamic OpenRouter call.
 - Security headers (CSP, HSTS, etc.) live in `src/middleware.ts`. **Production CSP is strict**: inline scripts are allowed only via the SHA256 hash of the theme pre-paint script in `Layout.astro` (`<script is:inline>`). Don't edit that script without recomputing the hash in `middleware.ts` — Safari blocks unmatched inline scripts silently (Chrome is more permissive, so this fails unevenly across browsers). Dev CSP is relaxed to keep Vite HMR + Astro dev toolbar working.
 - `/api/chat` rejects cross-origin POSTs with 403 `Origen no permitido` unless the request's `Origin` (or `Referer`) matches an entry in `ALLOWED_ORIGINS`. When you change deploy targets, update `DEFAULT_ALLOWED_ORIGINS` in `src/pages/api/chat.ts` and/or set the `ALLOWED_ORIGINS` env var — see the Environment section.
+- The `provider` field in the `/api/chat` body is allowlisted (`ALLOWED_PROVIDERS`). Unknown values silently fall back to `openrouter`. `model` is only consumed on the `openrouter` branch; sending one with `provider: "copiloto"` is harmless but pointless.
 
 ## Deployment
 
