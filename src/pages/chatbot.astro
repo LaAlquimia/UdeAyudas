@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/Base.astro';
 ---
 
-<BaseLayout title="UdeAyuda | Copiloto Académico UdeA">
+<BaseLayout title="UdeAyudas | Copiloto Académico UdeA">
 
 <div class="roles-page" id="roles-page">
   <canvas id="field" aria-hidden="true"></canvas>
@@ -10,8 +10,8 @@ import BaseLayout from '../layouts/Base.astro';
   <!-- ── TOP NAV ── -->
   <header class="top-nav">
     <a href="/" class="logo-link">
-      <img src="/assets/Isologo_transparente.png" alt="UdeAyuda" width="26" height="26" />
-      <span class="wordmark">UdeAyuda<span class="grad-text">.</span></span>
+      <img src="/assets/Isologo_transparente.png" alt="UdeAyudas" width="26" height="26" />
+      <span class="wordmark">UdeAyudas<span class="grad-text">.</span></span>
     </a>
     <a href="/" class="back-link mono">← Volver al inicio</a>
   </header>
@@ -118,7 +118,7 @@ import BaseLayout from '../layouts/Base.astro';
         <div class="messages" id="messages">
           <div class="welcome" id="welcome">
             <img src="/assets/logosimbolo-horizontal-png.png" alt="Universidad de Antioquia" class="welcome-logo" />
-            <h2 class="welcome-title">Hola, soy <em class="grad-text">UdeAyuda</em></h2>
+            <h2 class="welcome-title">Hola, soy <em class="grad-text">UdeAyudas</em></h2>
             <p class="welcome-sub">Selecciona tu rol en la UdeA para comenzar, o realiza una consulta directamente.</p>
             <div class="chips-row">
               <button class="q-chip" data-q="¿Cuáles son los requisitos para cancelar una materia?">Cancelar materia</button>
@@ -844,7 +844,7 @@ async function send(txt: string) {
 function addBubble(role: 'user' | 'assistant', text: string) {
   const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
   const div = document.createElement('div'); div.className = `msg ${role}`;
-  div.innerHTML = `<div class="msg-bubble">${role === 'assistant' ? renderMarkdown(text) : esc(text)}</div><span class="msg-meta">${role === 'user' ? 'Tú' : 'UdeAyuda'} · ${t}</span>`;
+  div.innerHTML = `<div class="msg-bubble">${role === 'assistant' ? renderMarkdown(text) : esc(text)}</div><span class="msg-meta">${role === 'user' ? 'Tú' : 'UdeAyudas'} · ${t}</span>`;
   msgsEl.appendChild(div); scroll(); return div;
 }
 
