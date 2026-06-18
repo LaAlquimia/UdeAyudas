@@ -2,7 +2,9 @@
 
 > Asistente inteligente para los trámites y procesos universitarios de la **Universidad de Antioquia** (UdeA).
 
-🌐 **Sitio en vivo:** [udeayudas.netlify.app](https://udeayudas.netlify.app)
+🌐 **Sitio en vivo:** [udeayudas.netlify.app](https://udeayudas.netlify.app)  
+🗄️ **Vectorización y web scraping:** [udeaScrape](https://github.com/LaAlquimia/udeaScrape)  
+🤖 **LangGraph / backend conversacional:** [LangGraph_UdeAyudas](https://github.com/Marlon0144/LangGraph_UdeAyudas.git)
 
 UdeAyudas es una interfaz web con estética **liquid glass** que integra un chatbot potenciado por **OpenRouter AI** y está especializado en orientar a estudiantes, egresados, docentes y personal administrativo sobre los trámites y procedimientos académicos y administrativos más comunes de la UdeA: matrícula, certificados, homologaciones, calendario académico, becas, grados y más.
 
