@@ -1,0 +1,216 @@
+---
+---
+<section id="agentes" class="modules-section reveal">
+  <div class="content-wrapper">
+    <div class="capa-header">
+      <h3 class="capa-title">NUESTROS AGENTES</h3>
+      <p class="capa-desc">Separar los flujos en agentes distintos evita que el modelo mezcle contextos. Cada agente tiene una responsabilidad única y bien definida.</p>
+    </div>
+
+    <div class="modules-grid-4">
+      <!-- Agente 1 -->
+      <a href="/chatbot" class="module-card">
+        <div class="card-accent grad-ink"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="role-label ink">EL ORQUESTADOR</span>
+            <span class="lab-badge mono">NLU · LangGraph</span>
+          </div>
+          <h4 class="agent-name">Agente Enrutador</h4>
+          <p class="agent-desc">Recibe el prompt inicial, analiza la intención y decide a qué agente especialista enviarle la tarea. ¿Reglamento disciplinario o proceso de cancelación?</p>
+          <div class="card-footer">
+            <span class="card-link">Probar →</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Agente 2 -->
+      <a href="/chatbot" class="module-card">
+        <div class="card-accent grad-coral"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="role-label coral">ESPECIALISTA RAG</span>
+            <span class="lab-badge mono">Vector store</span>
+          </div>
+          <h4 class="agent-name">Agente Documentalista</h4>
+          <p class="agent-desc">Se conecta a la base vectorial con los PDFs institucionales. Extrae artículos, resoluciones y reglas exactas relevantes a la consulta — sin inventar nada.</p>
+          <div class="card-footer">
+            <span class="card-link">Probar →</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Agente 3 -->
+      <a href="/chatbot" class="module-card">
+        <div class="card-accent grad-green"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="role-label green">ESPECIALISTA EN FLUJOS</span>
+            <span class="lab-badge mono">Workflows</span>
+          </div>
+          <h4 class="agent-name">Agente de Procesos</h4>
+          <p class="agent-desc">Maneja consultas operativas de alto impacto. Tiene en su contexto el paso a paso lógico de los trámites para guiar al usuario de forma secuencial.</p>
+          <div class="card-footer">
+            <span class="card-link">Probar →</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Agente 4 -->
+      <a href="/chatbot" class="module-card">
+        <div class="card-accent grad-blue"></div>
+        <div class="card-body">
+          <div class="card-top">
+            <span class="role-label blue">AUDITOR DE RESPUESTAS</span>
+            <span class="lab-badge mono">LLM · Citations</span>
+          </div>
+          <h4 class="agent-name">Agente Sintetizador</h4>
+          <p class="agent-desc">Recibe la información cruda y redacta la respuesta final en lenguaje natural, empático y claro — citando la fuente exacta y verificando que no haya alucinaciones.</p>
+          <div class="card-footer">
+            <span class="card-link">Probar →</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .modules-section {
+    padding: 5rem 0;
+    background: linear-gradient(to bottom, var(--paper), var(--cream));
+  }
+
+  .content-wrapper {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  .capa-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .capa-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .capa-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 44rem;
+    font-weight: 300;
+  }
+
+  /* 2×2 compact grid */
+  .modules-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .module-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+  .module-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.07);
+    border-color: var(--line-strong);
+  }
+
+  /* Thin colour bar at the top instead of big header */
+  .card-accent {
+    height: 4px;
+    width: 100%;
+  }
+  .card-accent.grad-ink   { background: var(--ink); }
+  .card-accent.grad-coral { background: var(--grad-orange); }
+  .card-accent.grad-green { background: var(--verified); }
+  .card-accent.grad-blue  { background: var(--signal); }
+
+  .card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .role-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .role-label.coral { color: var(--coral-600); }
+  .role-label.green { color: var(--verified); }
+  .role-label.blue  { color: var(--signal); }
+  .role-label.ink   { color: var(--ink); }
+
+  .lab-badge {
+    font-size: 0.62rem;
+    color: var(--muted);
+    background: var(--cream-02);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+  }
+
+  .agent-name {
+    font-size: 1.2rem;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .agent-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    font-weight: 300;
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--line);
+    padding-top: 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  .card-link {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--coral-600);
+    transition: transform 0.2s;
+  }
+  .module-card:hover .card-link {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 700px) {
+    .modules-grid-4 { grid-template-columns: 1fr; }
+  }
+</style>

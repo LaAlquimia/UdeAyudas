@@ -1,16 +1,853 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import ChatBot from '../components/ChatBot.astro';
+import BaseLayout from '../layouts/Base.astro';
 ---
 
-<Layout title="UdeAyudas — Asistente UdeA" description="Chatea con UdeAyudas, el asistente para trámites de la Universidad de Antioquia" currentPath="/chatbot" fullHeight={true} hideFooter={true}>
-  <div class="chat-page">
-    <ChatBot />
-  </div>
-</Layout>
+<BaseLayout title="UdeAyuda | Copiloto Académico UdeA">
 
-<style is:global>
-  body {
+<div class="roles-page" id="roles-page">
+  <canvas id="field" aria-hidden="true"></canvas>
+
+  <!-- ── TOP NAV ── -->
+  <header class="top-nav">
+    <a href="/" class="logo-link">
+      <img src="/assets/Isologo_transparente.png" alt="UdeAyuda" width="26" height="26" />
+      <span class="wordmark">UdeAyuda<span class="grad-text">.</span></span>
+    </a>
+    <a href="/" class="back-link mono">← Volver al inicio</a>
+  </header>
+
+  <!-- ── BODY ── -->
+  <div class="main-area">
+    <div class="content-frame" id="content-frame">
+
+      <!-- LEFT: University list + mega menu overlaid -->
+      <aside class="uni-panel" id="uni-panel">
+        <div class="uni-panel-header">
+          <h2 class="uni-panel-title">Universidad</h2>
+          <p class="uni-panel-sub mono">Selecciona tu rol para continuar</p>
+        </div>
+        <ul class="uni-list">
+          <li><button class="uni-item" data-uni="Universidad de Antioquia" data-abbr="UdeA" data-color="#026937" data-bg="#EBF7E8">
+            <div class="inst-logo" style="background:#FFFFFF; border: 1px solid var(--line);">
+              <img src="/assets/logosimbolo-vertical.png" alt="UdeA" class="inst-logo-img" style="width:32px; height:32px; object-fit:contain; filter: none;" />
+            </div>
+            <div class="uname-wrap">
+              <span class="uname">Universidad de Antioquia</span>
+              <span class="uname-sub mono">Medellín · Colombia</span>
+            </div>
+          </button></li>
+        </ul>
+
+        <!-- MEGA MENU: overlays the uni-panel on institution selection -->
+        <div class="mega-menu" id="mega-menu" aria-hidden="true">
+          <div class="mega-inner">
+            <div class="mega-header">
+              <div class="mega-header-left">
+                <div class="mega-inst-logo" id="mega-inst-logo" style="background:#FFFFFF; border: 1px solid var(--line);">
+                  <img src="/assets/logosimbolo-vertical.png" alt="UdeA" class="mega-logo-img" style="width:48px; height:48px; object-fit:contain; filter: none;" />
+                </div>
+                <div class="mega-header-text">
+                  <p class="mega-eyebrow mono">Institución seleccionada</p>
+                  <h3 class="mega-uni-name" id="mega-uni-name"></h3>
+                </div>
+              </div>
+              <button class="mega-close" id="mega-close" aria-label="Cerrar">✕</button>
+            </div>
+            <p class="mega-prompt">¿Cuál es tu rol en esta institución?</p>
+            <ul class="role-list">
+              <li><button class="role-option" data-role="Estudiante">
+                <span class="role-opt-name">Estudiante</span>
+                <span class="role-opt-desc mono">Matrícula, cancelaciones, reglamento estudiantil, homologaciones y trámites académicos</span>
+              </button></li>
+              <li><button class="role-option" data-role="Aspirante">
+                <span class="role-opt-name">Aspirante</span>
+                <span class="role-opt-desc mono">Proceso de admisión PIVU, requisitos de ingreso y oferta de programas</span>
+              </button></li>
+              <li><button class="role-option" data-role="Egresado">
+                <span class="role-opt-name">Egresado/a</span>
+                <span class="role-opt-desc mono">Certificados, constancias, acto de grado y vinculación con egresados</span>
+              </button></li>
+              <li><button class="role-option" data-role="Docente">
+                <span class="role-opt-name">Docente</span>
+                <span class="role-opt-desc mono">Estatuto profesoral, carga académica, comisiones e investigación</span>
+              </button></li>
+              <li><button class="role-option" data-role="Decano">
+                <span class="role-opt-name">Decano/a</span>
+                <span class="role-opt-desc mono">Normativa de gestión de facultad, consejos y representación institucional</span>
+              </button></li>
+              <li><button class="role-option" data-role="Vicedecano">
+                <span class="role-opt-name">Vicedecano/a</span>
+                <span class="role-opt-desc mono">Coordinación académica, apoyo a decanatura y seguimiento curricular</span>
+              </button></li>
+              <li><button class="role-option" data-role="Jefe de Departamento">
+                <span class="role-opt-name">Jefe de Departamento</span>
+                <span class="role-opt-desc mono">Asignación docente, gestión académica y normativa de departamento</span>
+              </button></li>
+              <li><button class="role-option" data-role="Coordinador de Programa">
+                <span class="role-opt-name">Coordinador/a de Programa</span>
+                <span class="role-opt-desc mono">Acreditación, currículo, comité de carrera y seguimiento estudiantil</span>
+              </button></li>
+              <li><button class="role-option" data-role="Personal Administrativo">
+                <span class="role-opt-name">Personal Administrativo</span>
+                <span class="role-opt-desc mono">Secretarías, gestión documental, resoluciones y procesos de nómina</span>
+              </button></li>
+              <li><button class="role-option" data-role="Externo">
+                <span class="role-opt-name">Externo</span>
+                <span class="role-opt-desc mono">Consultas generales, oferta académica, convenios y visitantes institucionales</span>
+              </button></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT: Chat (always visible) -->
+      <div class="chat-panel" id="chat-panel">
+
+        <!-- Context strip (shown once session starts) -->
+        <div class="ctx-strip" id="ctx-strip" style="display:none;">
+          <div class="ctx-left">
+            <div class="ctx-inst-logo" id="ctx-inst-logo"></div>
+            <span class="ctx-abbr" id="ctx-abbr"></span>
+            <span class="ctx-separator">·</span>
+            <span class="ctx-role" id="ctx-role-label"></span>
+          </div>
+          <button class="ctx-change mono" id="ctx-change">Cambiar</button>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages" id="messages">
+          <div class="welcome" id="welcome">
+            <img src="/assets/logosimbolo-horizontal-png.png" alt="Universidad de Antioquia" class="welcome-logo" />
+            <h2 class="welcome-title">Hola, soy <em class="grad-text">UdeAyuda</em></h2>
+            <p class="welcome-sub">Selecciona tu rol en la UdeA para comenzar, o realiza una consulta directamente.</p>
+            <div class="chips-row">
+              <button class="q-chip" data-q="¿Cuáles son los requisitos para cancelar una materia?">Cancelar materia</button>
+              <button class="q-chip" data-q="¿Cómo funciona el proceso de matrícula?">Proceso de matrícula</button>
+              <button class="q-chip" data-q="¿Qué documentos necesito para una homologación?">Homologación</button>
+              <button class="q-chip" data-q="¿Cuál es el reglamento sobre pérdida de cupo?">Pérdida de cupo</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Input -->
+        <div class="input-area">
+          <div class="input-wrap">
+            <textarea id="chat-input" placeholder="Escribe tu consulta…" rows="1" maxlength="2000"></textarea>
+            <button id="voice-btn" aria-label="Entrada por voz" title="Entrada por voz">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="22"/>
+                <line x1="8" y1="22" x2="16" y2="22"/>
+              </svg>
+            </button>
+            <button id="send-btn" aria-label="Enviar">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/></svg>
+            </button>
+          </div>
+          <p class="input-hint mono"><kbd>Enter</kbd> envía · <kbd>Shift+Enter</kbd> nueva línea · <kbd>🎤</kbd> voz</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</BaseLayout>
+
+<style>
+  :global(html), :global(body) { height: 100%; overflow: hidden; }
+
+  .roles-page {
+    width: 100vw; height: 100vh;
+    display: flex; flex-direction: column;
+    /* background-color is the institution tint; white overlays add depth */
+    background-color: #EBF7E8;
+    background-image:
+      radial-gradient(130% 80% at 75% 0%, rgba(255,255,255,.55), transparent 50%),
+      radial-gradient(70% 55% at 5% 10%, rgba(255,255,255,.35), transparent 60%);
+    overflow: hidden; position: relative;
+    transition: background-color 0.65s cubic-bezier(.4,0,.2,1);
+  }
+
+  #field { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  /* ── Nav ── */
+  .top-nav {
+    position: relative; z-index: 20;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .85rem 2rem;
+    background: rgba(255,255,255,.55);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255,255,255,.7);
+    flex-shrink: 0;
+  }
+
+  .logo-link {
+    display: flex; align-items: center; gap: .55rem;
+    font-family: 'Azurio', serif; font-size: 1.05rem; font-weight: 500;
+    color: var(--ink); text-decoration: none;
+  }
+
+  .back-link {
+    font-size: .73rem; color: var(--muted); text-decoration: none; transition: color .2s;
+  }
+  .back-link:hover { color: var(--ink); }
+
+  /* ── Main ── */
+  .main-area {
+    flex: 1; overflow: hidden; display: flex;
+    padding: 1.5rem 2rem;
+    position: relative; z-index: 1; min-height: 0;
+  }
+
+  .content-frame {
+    display: grid;
+    grid-template-columns: 248px 1fr;
+    gap: 1.25rem;
+    width: 100%; max-width: 1280px; margin: 0 auto; min-height: 0;
+    transition: grid-template-columns .5s cubic-bezier(.4,0,.2,1), gap .5s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* When session active: collapse left panel */
+  .content-frame.session-active {
+    grid-template-columns: 0px 1fr;
+    gap: 0;
+  }
+
+  /* ── University panel ── */
+  .uni-panel {
+    position: relative; /* positioning context for mega-menu */
+    background: rgba(255,255,255,.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.8);
+    border-radius: 16px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(2,105,55,.10);
+    transition: opacity .4s ease, transform .4s ease;
+    min-height: 0;
+  }
+
+  .content-frame.session-active .uni-panel {
+    opacity: 0; pointer-events: none;
+    transform: translateX(-12px);
+  }
+
+  .uni-panel-header {
+    padding: 1rem 1.1rem .65rem;
+    border-bottom: 1px solid var(--line); flex-shrink: 0;
+  }
+  .uni-panel-title { font-family: 'Azurio', serif; font-size: .95rem; color: var(--ink); margin-bottom:.15rem; }
+  .uni-panel-sub { font-size: .6rem; color: var(--muted); }
+
+  .uni-list {
+    list-style: none; overflow-y: auto; flex: 1;
+    padding: .4rem 0 .75rem;
+    scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  }
+  .uni-list::-webkit-scrollbar { width: 3px; }
+  .uni-list::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+  .uni-group-label {
+    display: block; font-size: .56rem; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--muted); padding: .5rem 1.1rem .25rem; font-weight: 600;
+  }
+
+  .uni-item {
+    display: flex; align-items: center; gap: .7rem;
+    width: 100%; padding: .45rem 1rem;
+    background: none; border: none; cursor: pointer; text-align: left;
+    border-left: 2.5px solid transparent;
+    transition: background .14s, border-color .14s;
+  }
+  .uni-item:hover { background: rgba(0,0,0,.04); border-left-color: rgba(0,0,0,.15); }
+  .uni-item.selected { background: rgba(0,0,0,.06); border-left-color: rgba(0,0,0,.25); }
+
+  /* Institution logo tile — rectangular for horizontal logo */
+  .inst-logo {
+    width: 82px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; overflow: hidden; padding: 5px;
+  }
+  .inst-logo-img {
+    width: 100%; height: 100%; object-fit: contain;
+    display: block;
+  }
+
+  .uname-wrap { display: flex; flex-direction: column; gap: .1rem; }
+  .uname { font-size: .78rem; color: var(--body); font-weight: 300; line-height: 1.3; }
+  .uname-sub { font-size: .56rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── Mega menu — overlays the uni-panel ── */
+  .mega-menu {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    background: white;
+    border-radius: 16px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-10px) scale(.98);
+    transform-origin: left center;
+    transition: opacity .22s ease, transform .22s ease;
+    display: flex; flex-direction: column;
     overflow: hidden;
   }
+
+  .mega-menu.open {
+    opacity: 1; pointer-events: all;
+    transform: translateX(0) scale(1);
+  }
+
+  .mega-inner {
+    padding: 1.25rem 1.25rem 1rem;
+    overflow-y: auto; flex: 1;
+    scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  }
+  .mega-inner::-webkit-scrollbar { width: 3px; }
+  .mega-inner::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+  .mega-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 1.1rem;
+  }
+
+  .mega-header-left {
+    display: flex; align-items: center; gap: .75rem;
+  }
+
+  /* Large logo tile inside mega menu — horizontal logo */
+  .mega-inst-logo {
+    width: 64px; height: 64px; border-radius: 12px;
+    background: var(--coral-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; overflow: hidden; padding: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,.18);
+    transition: background-color .3s ease;
+  }
+
+  .mega-header-text { display: flex; flex-direction: column; gap: .1rem; }
+
+  .mega-eyebrow {
+    font-size: .56rem; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--coral-600); font-weight: 600;
+  }
+
+  .mega-uni-name {
+    font-family: 'Azurio', serif; font-size: .9rem; color: var(--ink); line-height: 1.2;
+  }
+
+  .mega-close {
+    background: none; border: none; cursor: pointer;
+    font-size: .85rem; color: var(--muted); padding: .2rem .4rem;
+    border-radius: 4px; line-height: 1;
+    transition: background .15s, color .15s;
+    flex-shrink: 0; margin-top: .1rem;
+  }
+  .mega-close:hover { background: var(--cream-02); color: var(--ink); }
+
+  .mega-prompt {
+    font-size: .78rem; color: var(--muted); font-weight: 300;
+    margin-bottom: .85rem; line-height: 1.4;
+    padding-bottom: .75rem; border-bottom: 1px solid var(--line);
+  }
+
+  .role-list { list-style: none; display: flex; flex-direction: column; gap: .2rem; }
+
+  .role-option {
+    width: 100%; background: none; border: none; cursor: pointer;
+    text-align: left; padding: .7rem .85rem;
+    border-radius: 10px; display: flex; flex-direction: column; gap: .2rem;
+    transition: background .15s;
+    border: 1px solid transparent;
+  }
+  .role-option:hover { background: var(--cream-02); border-color: var(--line); }
+  .role-option:hover .role-opt-name { color: var(--coral-700); }
+
+  .role-opt-name {
+    font-family: 'Azurio', serif; font-size: .95rem; color: var(--ink);
+    transition: color .15s;
+  }
+  .role-opt-desc {
+    font-size: .6rem; color: var(--muted); line-height: 1.3; font-weight: 400;
+  }
+
+  /* ── Chat panel ── */
+  .chat-panel {
+    background: rgba(255,255,255,.65);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,.85);
+    border-radius: 16px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 28px rgba(2,105,55,.10);
+    min-height: 0;
+  }
+
+  /* ── Context strip ── */
+  .ctx-strip {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: .55rem 1.1rem;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,.5); flex-shrink: 0;
+  }
+  .ctx-left { display: flex; align-items: center; gap: .5rem; }
+
+  /* Small logo tile in context strip */
+  .ctx-inst-logo {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--coral-400);
+    flex-shrink: 0;
+    transition: background-color .3s ease;
+  }
+
+  .ctx-abbr {
+    font-family: 'JetBrains Mono', monospace; font-size: .65rem;
+    font-weight: 700; text-transform: uppercase;
+    /* color, background, border set dynamically via JS */
+    color: var(--coral-600);
+    background: rgba(2,105,55,.08); border: 1px solid rgba(2,105,55,.22);
+    padding: .15rem .5rem; border-radius: 4px;
+    transition: color .3s ease, background-color .3s ease, border-color .3s ease;
+  }
+
+  .ctx-separator { color: var(--line-strong); font-size: .75rem; }
+
+  .ctx-role {
+    font-size: .78rem; color: var(--ink); font-weight: 500;
+  }
+
+  .ctx-change {
+    font-size: .62rem; color: var(--muted);
+    background: none; border: 1px solid var(--line);
+    padding: .2rem .6rem; border-radius: 6px; cursor: pointer;
+    transition: all .2s;
+  }
+  .ctx-change:hover { color: var(--ink); border-color: var(--line-strong); }
+
+  /* ── Messages ── */
+  .messages {
+    flex: 1; overflow-y: auto; padding: 1.5rem;
+    display: flex; flex-direction: column; gap: 1rem;
+    scroll-behavior: smooth; min-height: 0;
+    scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  }
+  .messages::-webkit-scrollbar { width: 3px; }
+  .messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+  /* Welcome */
+  .welcome {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; margin: auto; max-width: 380px; padding: 2rem 1rem;
+  }
+  .welcome-logo { margin-bottom: 1.1rem; width: 220px; height: auto; object-fit: contain; opacity: .9; }
+  .mega-logo-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .welcome-title { font-family: 'Azurio', serif; font-size: 1.5rem; color: var(--ink); margin-bottom: .55rem; }
+  .welcome-sub { font-size: .87rem; color: var(--muted); font-weight: 300; line-height: 1.6; margin-bottom: 1.4rem; }
+
+  .chips-row { display: flex; flex-wrap: wrap; gap: .4rem; justify-content: center; }
+  .q-chip {
+    background: rgba(2,105,55,.08); border: 1px solid rgba(2,105,55,.22);
+    border-radius: 999px; padding: .3rem .75rem; font-size: .74rem;
+    color: var(--coral-600); cursor: pointer; font-family: 'Replica','Inter',sans-serif;
+    transition: all .18s;
+  }
+  .q-chip:hover { background: rgba(2,105,55,.15); border-color: var(--coral-500); }
+
+  /* Bubbles */
+  :global(.msg) { display: flex; flex-direction: column; gap: .3rem; max-width: 74%; }
+  :global(.msg.user) { align-self: flex-end; align-items: flex-end; }
+  :global(.msg.assistant) { align-self: flex-start; align-items: flex-start; }
+
+  :global(.msg-bubble) { padding: .7rem 1rem; border-radius: 14px; font-size: .875rem; line-height: 1.65; }
+  :global(.msg.user .msg-bubble) { background: var(--ink); color: white; border-radius: 14px 14px 4px 14px; }
+  :global(.msg.assistant .msg-bubble) {
+    background: white; color: var(--body); border: 1px solid var(--line);
+    border-radius: 14px 14px 14px 4px; box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  :global(.msg-meta) { font-family: 'JetBrains Mono', monospace; font-size: .57rem; color: var(--muted); }
+
+  :global(.citation) {
+    display: inline-flex; align-items: center; gap: .3rem;
+    background: rgba(15,110,86,.07); border: 1px solid rgba(15,110,86,.2);
+    color: var(--verified); border-radius: 6px; padding: .2rem .55rem;
+    font-family: 'JetBrains Mono', monospace; font-size: .6rem; margin-top: .35rem;
+  }
+
+  /* Typing */
+  :global(.typing-indicator) {
+    display: flex; align-items: center; gap: .32rem;
+    padding: .65rem 1rem; background: white; border: 1px solid var(--line);
+    border-radius: 14px 14px 14px 4px; align-self: flex-start;
+    box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  :global(.typing-dot) {
+    width: 5px; height: 5px; background: var(--muted); border-radius: 50%;
+    animation: typingAnim 1.4s infinite ease-in-out;
+  }
+  :global(.typing-dot:nth-child(2)) { animation-delay: .2s; }
+  :global(.typing-dot:nth-child(3)) { animation-delay: .4s; }
+  @keyframes typingAnim {
+    0%,80%,100% { opacity:.25; transform:translateY(0); }
+    40% { opacity:1; transform:translateY(-4px); }
+  }
+
+  /* Input */
+  .input-area {
+    padding: .85rem 1.25rem 1rem;
+    border-top: 1px solid var(--line);
+    background: rgba(255,255,255,.5); flex-shrink: 0;
+  }
+  .input-wrap {
+    display: flex; align-items: flex-end; gap: .6rem;
+    background: white; border: 1.5px solid var(--line);
+    border-radius: 12px; padding: .5rem .5rem .5rem .9rem;
+    transition: border-color .2s; box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  }
+  .input-wrap:focus-within { border-color: var(--coral-400); }
+
+  #chat-input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--ink); font-size: .875rem;
+    font-family: 'Replica','Inter',sans-serif; font-weight: 300;
+    resize: none; line-height: 1.55; max-height: 110px; overflow-y: auto;
+  }
+  #chat-input::placeholder { color: var(--muted); }
+
+  #voice-btn {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    background: rgba(2,105,55,.08); border: 1.5px solid rgba(2,105,55,.2);
+    color: var(--coral-600); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .2s;
+  }
+  #voice-btn:hover { background: rgba(2,105,55,.15); border-color: var(--coral-400); }
+  #voice-btn.listening {
+    background: var(--coral-600); color: white; border-color: var(--coral-600);
+    animation: voicePulse 1.2s ease-in-out infinite;
+  }
+  @keyframes voicePulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(2,105,55,.45); }
+    50% { box-shadow: 0 0 0 7px rgba(2,105,55,0); }
+  }
+
+  #send-btn {
+    width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+    background: var(--ink); border: none; color: white; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .18s, transform .15s;
+  }
+  #send-btn:hover { background: var(--coral-600); transform: scale(1.05); }
+  #send-btn:disabled { opacity: .35; cursor: default; transform: none; }
+
+  .input-hint { font-size: .59rem; color: var(--muted); margin-top: .4rem; font-weight: 300; }
+  .input-hint kbd {
+    background: var(--cream-02); border: 1px solid var(--line);
+    border-radius: 3px; padding: .03rem .28rem; font-size: .57rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  @media (max-width: 860px) {
+    .main-area { padding: 1rem; }
+    .content-frame { grid-template-columns: 200px 1fr; }
+  }
+  @media (max-width: 600px) {
+    .content-frame { grid-template-columns: 1fr; }
+    .content-frame.session-active { grid-template-columns: 1fr; }
+    .uni-panel { display: none; }
+  }
 </style>
+
+<script>
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
+
+const PURIFY_CONFIG = {
+  ALLOWED_TAGS: [
+    'a', 'b', 'i', 'em', 'strong', 'u', 's', 'code', 'pre', 'kbd', 'samp',
+    'p', 'br', 'hr', 'blockquote',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'ul', 'ol', 'li',
+    'table', 'thead', 'tbody', 'tr', 'th', 'td',
+    'span', 'div',
+    'img',
+  ],
+  ALLOWED_ATTR: ['href', 'title', 'alt', 'src', 'rel', 'target', 'lang', 'class'],
+  ALLOWED_URI_REGEXP: /^(?:(?:https?|mailto|tel):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i,
+  FORBID_TAGS: ['script', 'style', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select', 'link', 'meta', 'base'],
+  FORBID_ATTR: ['style', 'onerror', 'onload', 'onclick', 'onmouseover', 'onfocus', 'onblur', 'srcdoc'],
+};
+
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A') {
+    node.setAttribute('rel', 'noopener noreferrer');
+    node.setAttribute('target', '_blank');
+  }
+});
+
+function renderMarkdown(text: string) {
+  const rawHtml = marked.parse(text, { breaks: true });
+  // @ts-ignore
+  return DOMPurify.sanitize(rawHtml, PURIFY_CONFIG);
+}
+
+const DEFAULT_BG = '#EBF7E8';
+const DEFAULT_DOT: [number,number,number] = [67, 182, 73]; /* Pantone 361 C — más visible sobre fondo claro */
+
+const state = { university: '', abbr: '', role: '', color: '', bg: '' };
+
+// ── Canvas dot color (lerped toward target) ──
+let dotR = DEFAULT_DOT[0], dotG = DEFAULT_DOT[1], dotB = DEFAULT_DOT[2];
+let tgtR = DEFAULT_DOT[0], tgtG = DEFAULT_DOT[1], tgtB = DEFAULT_DOT[2];
+
+function hexToRgb(hex: string): [number,number,number] {
+  return [
+    parseInt(hex.slice(1,3), 16),
+    parseInt(hex.slice(3,5), 16),
+    parseInt(hex.slice(5,7), 16),
+  ];
+}
+
+// ── Canvas wave ──
+(function() {
+  const c = document.getElementById('field') as HTMLCanvasElement;
+  if (!c) return;
+  const ctx = c.getContext('2d')!;
+  let W = c.width = innerWidth, H = c.height = innerHeight;
+  let mx = W/2, my = H/2, tx = W/2, ty = H/2, t = 0, lm = Date.now();
+  window.addEventListener('resize', () => { W = c.width = innerWidth; H = c.height = innerHeight; });
+  document.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; lm = Date.now(); });
+  document.addEventListener('touchmove', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; lm = Date.now(); }, { passive: true });
+  const GAP = 38, R = 310;
+  const tick = () => {
+    dotR += (tgtR - dotR) * .025;
+    dotG += (tgtG - dotG) * .025;
+    dotB += (tgtB - dotB) * .025;
+    const r = Math.round(dotR), g = Math.round(dotG), b = Math.round(dotB);
+
+    t += .016; mx += (tx-mx)*.08; my += (ty-my)*.08;
+    if (Date.now()-lm > 1200) { tx = W/2+Math.sin(t*.38)*220; ty = H/2+Math.cos(t*.32)*160; }
+    ctx.clearRect(0,0,W,H);
+
+    /* double glow — inner bright, outer soft halo */
+    const grd = ctx.createRadialGradient(mx,my,0,mx,my,R);
+    grd.addColorStop(0,`rgba(${r},${g},${b},.14)`);
+    grd.addColorStop(.4,`rgba(${r},${g},${b},.07)`);
+    grd.addColorStop(1,'transparent');
+    ctx.fillStyle=grd; ctx.fillRect(0,0,W,H);
+
+    for (let i=0; i<=Math.ceil(W/GAP); i++)
+      for (let j=0; j<=Math.ceil(H/GAP); j++) {
+        const bx=i*GAP+(W%GAP)/2, by=j*GAP+(H%GAP)/2;
+        const dx=bx-mx,dy=by-my,d=Math.sqrt(dx*dx+dy*dy);
+        const p=Math.max(0,1-d/R);
+        const y=by+Math.sin(d*.022-t*3)*p*15+Math.sin(t*1.0+(i+j)*.12)*1.5;
+        ctx.beginPath(); ctx.arc(bx,y,1.5+p*2.6,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${r},${g},${b},${.06+p*.42})`; ctx.fill();
+      }
+    requestAnimationFrame(tick);
+  };
+  tick();
+})();
+
+// ── Elements ──
+const rolesPage   = document.getElementById('roles-page')!;
+const frame       = document.getElementById('content-frame')!;
+const megaMenu    = document.getElementById('mega-menu')!;
+const megaUniName = document.getElementById('mega-uni-name')!;
+const megaInstLogo = document.getElementById('mega-inst-logo')!;
+const ctxStrip    = document.getElementById('ctx-strip')!;
+const ctxAbbr     = document.getElementById('ctx-abbr')!;
+const ctxInstLogo = document.getElementById('ctx-inst-logo')!;
+const ctxRoleLabel = document.getElementById('ctx-role-label')!;
+
+function applyInstitutionColor(color: string, bg: string) {
+  rolesPage.style.backgroundColor = bg;
+  const [r, g, b] = hexToRgb(color);
+  tgtR = r; tgtG = g; tgtB = b;
+}
+
+function resetColor() {
+  rolesPage.style.backgroundColor = DEFAULT_BG;
+  megaInstLogo.style.background = '';
+  ctxInstLogo.style.background = '';
+  ctxAbbr.style.color = '';
+  ctxAbbr.style.backgroundColor = '';
+  ctxAbbr.style.borderColor = '';
+  tgtR = DEFAULT_DOT[0]; tgtG = DEFAULT_DOT[1]; tgtB = DEFAULT_DOT[2];
+}
+
+// ── University click → open mega menu ──
+document.querySelectorAll<HTMLButtonElement>('.uni-item').forEach(item => {
+  item.addEventListener('click', () => {
+    state.university = item.dataset.uni || '';
+    state.abbr = item.dataset.abbr || '';
+    state.color = item.dataset.color || '#E55C32';
+    state.bg = item.dataset.bg || DEFAULT_BG;
+
+    megaUniName.textContent = state.university;
+    /* mega-inst-logo image is pre-filled in HTML; only update background color */
+
+    document.querySelectorAll('.uni-item').forEach(i => i.classList.remove('selected'));
+    item.classList.add('selected');
+
+    applyInstitutionColor(state.color, state.bg);
+
+    megaMenu.classList.add('open');
+    megaMenu.setAttribute('aria-hidden', 'false');
+  });
+});
+
+// ── Close mega menu ──
+document.getElementById('mega-close')?.addEventListener('click', closeMega);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMega(); });
+
+function closeMega() {
+  megaMenu.classList.remove('open');
+  megaMenu.setAttribute('aria-hidden', 'true');
+  document.querySelectorAll('.uni-item').forEach(i => i.classList.remove('selected'));
+  // Keep the background color if a university was already in state (session active)
+  if (!frame.classList.contains('session-active')) {
+    state.university = ''; state.abbr = ''; state.color = ''; state.bg = '';
+    resetColor();
+  }
+}
+
+// ── Role selection ──
+document.querySelectorAll<HTMLButtonElement>('.role-option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    state.role = opt.dataset.role || '';
+    megaMenu.classList.remove('open');
+
+    ctxInstLogo.style.background = state.color;
+    ctxAbbr.textContent = state.abbr;
+    ctxAbbr.style.color = state.color;
+    ctxAbbr.style.backgroundColor = state.color + '18';
+    ctxAbbr.style.borderColor = state.color + '40';
+    ctxRoleLabel.textContent = state.role;
+    ctxStrip.style.display = 'flex';
+
+    frame.classList.add('session-active');
+  });
+});
+
+// ── "Cambiar" resets session ──
+document.getElementById('ctx-change')?.addEventListener('click', () => {
+  state.university = ''; state.abbr = ''; state.role = ''; state.color = ''; state.bg = '';
+  ctxStrip.style.display = 'none';
+  frame.classList.remove('session-active');
+  document.querySelectorAll('.uni-item').forEach(i => i.classList.remove('selected'));
+  megaMenu.classList.remove('open');
+  megaMenu.setAttribute('aria-hidden', 'true');
+  resetColor();
+});
+
+// ── Chat ──
+let history: {role:string;content:string}[] = [];
+const msgsEl  = document.getElementById('messages')!;
+const inputEl = document.getElementById('chat-input') as HTMLTextAreaElement;
+const sendBtn = document.getElementById('send-btn') as HTMLButtonElement;
+
+inputEl.addEventListener('input', () => {
+  inputEl.style.height = 'auto';
+  inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + 'px';
+});
+inputEl.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); go(); } });
+sendBtn.addEventListener('click', go);
+
+// ── Voice input (Web Speech API) ──
+(function() {
+  const voiceBtn = document.getElementById('voice-btn') as HTMLButtonElement | null;
+  if (!voiceBtn) return;
+  const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  if (!SR) { voiceBtn.style.display = 'none'; return; }
+
+  const rec = new SR();
+  rec.lang = 'es-CO'; rec.continuous = false; rec.interimResults = true;
+  let listening = false;
+
+  rec.addEventListener('result', (e: any) => {
+    const t = Array.from(e.results as any[]).map((r: any) => r[0].transcript).join('');
+    inputEl.value = t;
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + 'px';
+    if (e.results[e.results.length - 1].isFinal) { listening = false; voiceBtn.classList.remove('listening'); }
+  });
+  rec.addEventListener('end', () => { listening = false; voiceBtn.classList.remove('listening'); });
+  rec.addEventListener('error', () => { listening = false; voiceBtn.classList.remove('listening'); });
+
+  voiceBtn.addEventListener('click', () => {
+    if (listening) { rec.stop(); }
+    else { rec.start(); listening = true; voiceBtn.classList.add('listening'); }
+  });
+})();
+
+document.querySelectorAll<HTMLButtonElement>('.q-chip').forEach(c => {
+  c.addEventListener('click', () => { inputEl.value = c.dataset.q || c.textContent || ''; go(); });
+});
+
+function go() {
+  const txt = inputEl.value.trim(); if (!txt) return;
+  inputEl.value = ''; inputEl.style.height = 'auto'; send(txt);
+}
+
+async function send(txt: string) {
+  document.getElementById('welcome')?.remove();
+  addBubble('user', txt);
+  history.push({ role: 'user', content: txt });
+
+  const tid = 'tp' + Date.now();
+  msgsEl.insertAdjacentHTML('beforeend',
+    `<div class="typing-indicator" id="${tid}"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`);
+  scroll(); sendBtn.disabled = true;
+
+  const backendMessage = state.role 
+    ? `[El usuario indica que su rol es: ${state.role}. Ten esto en cuenta para responder.]\n\n${txt}` 
+    : txt;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: backendMessage,
+        model: 'openai/gpt-4o-mini' // default fallback model
+      })
+    });
+
+    document.getElementById(tid)?.remove();
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Error al conectar con el servidor.');
+    }
+
+    const data = await res.json();
+    let full = data.reply || '';
+
+    const div = addBubble('assistant', full);
+    history.push({ role: 'assistant', content: full });
+    
+    // Add citation badge if any [Fuente: ...] found (just for style consistency)
+    const m = full.match(/\[Fuente:[^\]]+\]/);
+    if (m) div.insertAdjacentHTML('beforeend', `<span class="citation">✓ ${m[0].replace(/\[|\]/g, '')}</span>`);
+  } catch (e: any) {
+    document.getElementById(tid)?.remove();
+    addBubble('assistant', `⚠️ ${e.message || 'Error de conexión. Intenta de nuevo.'}`);
+  }
+  sendBtn.disabled = false; scroll();
+  inputEl.focus();
+}
+
+function addBubble(role: 'user' | 'assistant', text: string) {
+  const t = new Date().toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
+  const div = document.createElement('div'); div.className = `msg ${role}`;
+  div.innerHTML = `<div class="msg-bubble">${role === 'assistant' ? renderMarkdown(text) : esc(text)}</div><span class="msg-meta">${role === 'user' ? 'Tú' : 'UdeAyuda'} · ${t}</span>`;
+  msgsEl.appendChild(div); scroll(); return div;
+}
+
+function esc(t: string) { return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+function scroll() { msgsEl.scrollTop = msgsEl.scrollHeight; }
+</script>

@@ -1,0 +1,227 @@
+---
+---
+<section id="fuentes" class="fuentes-section reveal">
+  <div class="content-wrapper">
+    <div class="section-header">
+      <span class="eyebrow">Fuentes · documentación institucional</span>
+      <h2 class="section-title">Lo que el agente sabe. Y de dónde lo sabe.</h2>
+      <p class="lede">
+        El sistema se alimenta exclusivamente de las fuentes documentales oficiales de tu institución. Sin información externa ni web scraping no autorizado.
+      </p>
+    </div>
+
+    <div class="fuentes-grid">
+      <!-- DOC-01 -->
+      <div class="doc-card">
+        <div class="doc-tag coral">REGLAMENTO</div>
+        <h4 class="doc-title">Reglamento Estudiantil de Pregrado</h4>
+        <p class="doc-meta">Acuerdo Superior · vigente</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="fill coral-grad" style="width: 100%"></div></div>
+        </div>
+        <div class="doc-footer mono">
+          <span>1,284 chunks</span>
+          <span class="status green">indexado</span>
+        </div>
+      </div>
+
+      <!-- DOC-02 -->
+      <div class="doc-card">
+        <div class="doc-tag green">MATRÍCULA</div>
+        <h4 class="doc-title">Acuerdos de Matrícula y Costos</h4>
+        <p class="doc-meta">Consejo Superior · vigente</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="fill green-grad" style="width: 100%"></div></div>
+        </div>
+        <div class="doc-footer mono">
+          <span>312 chunks</span>
+          <span class="status green">indexado</span>
+        </div>
+      </div>
+
+      <!-- DOC-03 -->
+      <div class="doc-card">
+        <div class="doc-tag blue">TRÁMITES</div>
+        <h4 class="doc-title">Resoluciones y Procesos Administrativos</h4>
+        <p class="doc-meta">Decanatura · 2020 → presente</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="fill blue-grad" style="width: 100%"></div></div>
+        </div>
+        <div class="doc-footer mono">
+          <span>2,041 chunks</span>
+          <span class="status green">indexado</span>
+        </div>
+      </div>
+
+      <!-- DOC-04 -->
+      <div class="doc-card">
+        <div class="doc-tag ink">BIENESTAR</div>
+        <h4 class="doc-title">Programas de Apoyo y Bienestar</h4>
+        <p class="doc-meta">Bienestar Institucional · vigente</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="fill ink-grad" style="width: 100%"></div></div>
+        </div>
+        <div class="doc-footer mono">
+          <span>418 chunks</span>
+          <span class="status green">indexado</span>
+        </div>
+      </div>
+
+      <!-- DOC-05 -->
+      <div class="doc-card">
+        <div class="doc-tag coral-light">EQUIVALENCIAS</div>
+        <h4 class="doc-title">Acuerdo de Homologación y Reconocimiento</h4>
+        <p class="doc-meta">Vicerrectoría Académica · vigente</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="fill coral-grad" style="width: 100%"></div></div>
+        </div>
+        <div class="doc-footer mono">
+          <span>176 chunks</span>
+          <span class="status green">indexado</span>
+        </div>
+      </div>
+
+      <!-- DOC-06 -->
+      <div class="doc-card">
+        <div class="doc-tag gray">CALENDARIO</div>
+        <h4 class="doc-title">Calendario Académico Vigente</h4>
+        <p class="doc-meta">Dirección Académica · vigente</p>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div class="fill gray-grad" style="width: 100%"></div></div>
+        </div>
+        <div class="doc-footer mono">
+          <span>48 chunks</span>
+          <span class="status green">indexado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .fuentes-section {
+    padding: 6rem 0;
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+  }
+
+  .content-wrapper {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 48rem;
+    margin: 0 auto 4rem auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .eyebrow {
+    color: var(--coral-600);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .lede {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .fuentes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .doc-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .doc-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    border-color: var(--line-strong);
+  }
+
+  .doc-tag {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+  }
+  .doc-tag.coral { color: var(--coral-600); }
+  .doc-tag.green { color: var(--verified); }
+  .doc-tag.blue { color: var(--signal); }
+  .doc-tag.ink { color: var(--ink); }
+  .doc-tag.coral-light { color: var(--coral-400); }
+  .doc-tag.gray { color: var(--muted); }
+
+  .doc-title {
+    font-size: 1.05rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .doc-meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .progress-wrap {
+    margin-bottom: 1rem;
+    margin-top: auto;
+  }
+  .progress-bar {
+    height: 6px;
+    background: var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .fill { height: 100%; }
+  .fill.coral-grad { background: var(--grad-orange); }
+  .fill.green-grad { background: var(--verified); }
+  .fill.blue-grad { background: var(--signal); }
+  .fill.ink-grad { background: var(--ink); }
+  .fill.gray-grad { background: var(--muted); }
+
+  .doc-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+  }
+  .status.green {
+    color: var(--verified);
+    font-weight: 600;
+  }
+
+  @media (max-width: 880px) {
+    .fuentes-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .fuentes-grid { grid-template-columns: 1fr; }
+  }
+</style>
