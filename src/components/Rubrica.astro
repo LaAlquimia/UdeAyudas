@@ -1,0 +1,242 @@
+---
+---
+<section id="rubrica" class="rubrica-section reveal">
+  <div class="bg-decorations">
+    <div class="radial radial-1"></div>
+    <div class="radial radial-2"></div>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="rubrica-grid">
+      <div class="rubrica-left">
+        <span class="eyebrow grad-text">Cómo funciona el sistema</span>
+        <h2 class="section-title">
+          La norma deja de ser un PDF. Empieza a ser una <em class="grad-text">conversación</em>.
+        </h2>
+        <p class="lede">
+          UdeAyuda orquesta cuatro agentes especializados que trabajan en cadena: el Enrutador analiza tu intención, el Documentalista extrae la norma exacta, el Agente de Procesos te guía paso a paso, y el Sintetizador redacta la respuesta final con cita verificada.
+        </p>
+
+        <ul class="rubrica-list mono">
+          <li><strong>Agente Enrutador</strong> — analiza la intención y despacha al agente especialista correcto.</li>
+          <li><strong>Agente Documentalista</strong> — extrae artículos exactos del corpus vectorial sin inventar nada.</li>
+          <li><strong>Agente de Procesos</strong> — guía al usuario paso a paso en trámites operativos.</li>
+          <li><strong>Agente Sintetizador</strong> — redacta la respuesta final, verificada y citada.</li>
+          <li><strong>Escalabilidad modular</strong> — agentes drop-in. Cualquier institución adopta el agente cambiando solo el corpus.</li>
+        </ul>
+
+        <a href="/chatbot" class="btn-primary cta-enter">
+          <span class="dot pulse"></span>
+          Hablar con el agente →
+        </a>
+      </div>
+
+      <div class="rubrica-right">
+        <div class="terminal">
+          <div class="term-header">
+            <div class="dots">
+              <span class="dot-btn close"></span>
+              <span class="dot-btn min"></span>
+              <span class="dot-btn max"></span>
+            </div>
+            <div class="term-title mono">~/agentnexus · main</div>
+          </div>
+          <div class="term-body mono">
+            <div class="line"><span class="prompt">$</span> python ingest.py --source ./docs/</div>
+            <div class="line dim">&gt; parsing PDFs · chunking by article · embedding…</div>
+            <div class="line"><span class="success">✓</span> 1,284 chunks · vector store ready</div>
+            <br/>
+            <div class="line"><span class="prompt">$</span> rasa train && rasa run --enable-api</div>
+            <div class="line"><span class="success">✓</span> rasa NLU · 4 intents · enrutador / documentalista / procesos / sintetizador</div>
+            <div class="line"><span class="success">✓</span> langgraph router online</div>
+            <br/>
+            <div class="line"><span class="prompt">$</span> gradio app.py</div>
+            <div class="line"><span class="success">✓</span> agente listening on http://localhost:7860</div>
+            <br/>
+            <div class="line"><span class="user-msg">user</span> "¿Puedo solicitar una equivalencia sin haber aprobado el 50% de créditos?"</div>
+            <div class="line"><span class="bot-msg">→</span> Reglamento Académico · Art. 42 · párrafo 1 <span class="success">[✓ verificado]</span></div>
+            <br/>
+            <div class="line"><span class="prompt">$</span><span class="cursor blink"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .rubrica-section {
+    padding: 8rem 0;
+    background: var(--ink);
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bg-decorations {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .radial {
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(229, 92, 50, 0.15) 0%, transparent 70%);
+  }
+  .radial-1 { top: -200px; right: -200px; }
+  .radial-2 { bottom: -400px; left: -100px; }
+
+  .content-wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  .rubrica-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .eyebrow {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    color: white;
+    font-size: clamp(2.4rem, 4vw, 4rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .lede {
+    font-size: 1.125rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 3rem;
+    max-width: 32rem;
+  }
+
+  .rubrica-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 3rem;
+  }
+  .rubrica-list li {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.8);
+    position: relative;
+    padding-left: 1.5rem;
+    line-height: 1.5;
+  }
+  .rubrica-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--coral-500);
+  }
+  .rubrica-list strong {
+    color: white;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--coral-600);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: transform 0.2s, background 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    background: var(--coral-500);
+    transform: translateY(-2px);
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+  }
+
+  .terminal {
+    background: #07070A;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+
+  .term-header {
+    background: rgba(255,255,255,0.03);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot-btn {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .dot-btn.close { background: rgba(255,255,255,0.2); }
+  .dot-btn.min { background: var(--coral-300); }
+  .dot-btn.max { background: var(--coral-500); }
+
+  .term-title {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .term-body {
+    padding: 1.5rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .line { margin-bottom: 0.2rem; }
+  .prompt { color: var(--coral-400); margin-right: 0.5rem; }
+  .dim { color: rgba(255,255,255,0.4); }
+  .success { color: #4ADE80; margin-right: 0.5rem; }
+  .user-msg { color: var(--signal); font-weight: 600; margin-right: 0.5rem; }
+  .bot-msg { color: var(--coral-500); font-weight: 600; margin-right: 0.5rem; }
+  
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: rgba(255,255,255,0.8);
+    vertical-align: middle;
+    margin-left: 0.2rem;
+  }
+  .cursor.blink {
+    animation: blink 1s step-end infinite;
+  }
+
+  @media (max-width: 980px) {
+    .rubrica-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

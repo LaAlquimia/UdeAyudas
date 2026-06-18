@@ -1,0 +1,289 @@
+---
+---
+<section id="arquitectura" class="architecture-section reveal">
+  <div class="content-wrapper">
+    <div class="arch-header">
+      <span class="eyebrow">Arquitectura · RAG local + agentes</span>
+      <h2 class="section-title">Una sola tubería. De la pregunta a la cita.</h2>
+      <p class="lede">
+        Ingesta de PDFs oficiales, embeddings locales, NLU conversacional y un router que despacha al agente especialista en tiempo real.
+      </p>
+    </div>
+
+    <div class="arch-grid">
+      <div class="arch-left">
+        <ul class="arch-list">
+          <li><strong>Corpus documental</strong> — fuente oficial de la institución. Cero copyright.</li>
+          <li><strong>Ingesta</strong> — parser PDF, chunking semántico, normalización de artículos.</li>
+          <li><strong>Vector store</strong> — embeddings locales · retrieval top-k con metadatos.</li>
+          <li><strong>Rasa NLU</strong> — clasificación de intents · extracción de entidades.</li>
+          <li><strong>Router (LangGraph)</strong> — despacho con estado al agente correcto.</li>
+          <li><strong>Citation guard</strong> — cada respuesta exige artículo + parágrafo verificado.</li>
+          <li><strong>UI Gradio</strong> — chat conversacional con panel de fuentes.</li>
+        </ul>
+      </div>
+
+      <div class="arch-right">
+        <div class="arch-card">
+          <div class="card-header mono">
+            <span class="session-id">SESSION · copilot_run_0x7a3f</span>
+            <span class="status"><span class="dot green"></span>activo</span>
+          </div>
+          
+          <div class="diagram-wrapper">
+            <svg viewBox="0 0 520 380" class="arch-svg">
+              <defs>
+                <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="var(--muted)" />
+                </marker>
+              </defs>
+
+              <!-- Col 1: Fuentes -->
+              <g class="col" transform="translate(10, 40)">
+                <text x="0" y="-10" class="col-title mono">01 · FUENTES</text>
+                <rect x="0" y="0" width="120" height="40" rx="4" class="box" />
+                <text x="60" y="24" class="box-text">Corpus PDFs</text>
+                
+                <path d="M60,40 L60,70" class="link" marker-end="url(#arrow)" />
+                
+                <rect x="0" y="70" width="120" height="40" rx="4" class="box" />
+                <text x="60" y="94" class="box-text">Ingesta</text>
+                
+                <path d="M60,110 L60,140" class="link" marker-end="url(#arrow)" />
+                
+                <rect x="0" y="140" width="120" height="40" rx="4" class="box" />
+                <text x="60" y="164" class="box-text">Vector store</text>
+                
+                <rect x="0" y="260" width="120" height="40" rx="4" class="box user" />
+                <text x="60" y="284" class="box-text white">Usuario</text>
+              </g>
+
+              <!-- Col 2: NLU + Router -->
+              <g class="col" transform="translate(180, 40)">
+                <text x="0" y="-10" class="col-title mono">02 · NLU + ROUTER</text>
+                <rect x="0" y="0" width="160" height="300" rx="8" class="group-box" />
+                <text x="10" y="20" class="group-title mono">LangGraph</text>
+                
+                <rect x="20" y="40" width="120" height="40" rx="4" class="box border-coral" />
+                <text x="80" y="64" class="box-text">RASA NLU</text>
+                
+                <path d="M80,80 L80,100" class="link" marker-end="url(#arrow)" />
+                
+                <rect x="20" y="100" width="120" height="40" rx="4" class="box border-green" />
+                <text x="80" y="124" class="box-text">RAG retrieve</text>
+                
+                <path d="M80,140 L80,160" class="link" marker-end="url(#arrow)" />
+                
+                <rect x="20" y="160" width="120" height="40" rx="4" class="box border-blue" />
+                <text x="80" y="184" class="box-text">Agent router</text>
+                
+                <path d="M80,200 L80,220" class="link" marker-end="url(#arrow)" />
+                
+                <rect x="20" y="220" width="120" height="40" rx="4" class="box border-ink" />
+                <text x="80" y="244" class="box-text">Citation guard</text>
+                
+                <!-- Gradio UI outside LangGraph but inside Col 2 bounds -->
+                <rect x="20" y="320" width="120" height="40" rx="4" class="box border-dashed" />
+                <text x="80" y="344" class="box-text">Gradio UI</text>
+              </g>
+
+              <!-- Col 3: Agentes -->
+              <g class="col" transform="translate(390, 40)">
+                <text x="0" y="-10" class="col-title mono">03 · AGENTES</text>
+                
+                <rect x="0" y="20" width="120" height="30" rx="4" class="box small border-coral" />
+                <text x="60" y="39" class="box-text small">Reglamenta</text>
+                
+                <rect x="0" y="60" width="120" height="30" rx="4" class="box small border-coral" />
+                <text x="60" y="79" class="box-text small">Matrícula</text>
+                
+                <rect x="0" y="100" width="120" height="30" rx="4" class="box small border-coral" />
+                <text x="60" y="119" class="box-text small">Trámite</text>
+                
+                <rect x="0" y="140" width="120" height="30" rx="4" class="box small border-ink" />
+                <text x="60" y="159" class="box-text small">Oficio</text>
+                
+                <rect x="0" y="180" width="120" height="30" rx="4" class="box small border-ink" />
+                <text x="60" y="199" class="box-text small">Citador</text>
+                
+                <rect x="0" y="220" width="120" height="30" rx="4" class="box small border-ink" />
+                <text x="60" y="239" class="box-text small">Auditor</text>
+                
+                <rect x="0" y="280" width="120" height="40" rx="4" class="box fill-coral" />
+                <text x="60" y="304" class="box-text white small">Respuesta fund.</text>
+              </g>
+
+              <!-- Cross column links -->
+              <path d="M130,280 L200,340" class="link" marker-end="url(#arrow)" />
+              <path d="M130,160 L200,120" class="link" marker-end="url(#arrow)" />
+              
+              <!-- Router to Agents (indicative) -->
+              <path d="M340,180 L390,120" class="link" marker-end="url(#arrow)" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .architecture-section {
+    padding: 6rem 0;
+    background: var(--cream);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .content-wrapper {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  .arch-header {
+    text-align: center;
+    max-width: 48rem;
+    margin: 0 auto 4rem auto;
+  }
+
+  .eyebrow {
+    color: var(--coral-600);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .lede {
+    font-size: 1.1rem;
+    color: var(--muted);
+  }
+
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .arch-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .arch-list li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: var(--body);
+    line-height: 1.6;
+  }
+  .arch-list li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--coral-500);
+    font-weight: 700;
+  }
+  .arch-list strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .arch-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  .card-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+    background: rgba(0,0,0,0.02);
+  }
+  .status {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .dot.green {
+    width: 6px;
+    height: 6px;
+    background: var(--verified);
+    border-radius: 50%;
+  }
+
+  .diagram-wrapper {
+    padding: 2rem;
+  }
+
+  .arch-svg {
+    width: 100%;
+    height: auto;
+  }
+
+  .col-title {
+    font-size: 10px;
+    fill: var(--muted);
+  }
+
+  .box {
+    fill: white;
+    stroke: var(--line-strong);
+    stroke-width: 1.5;
+  }
+  .box.user { fill: var(--ink); stroke: none; }
+  .box.border-coral { stroke: var(--coral-500); }
+  .box.border-green { stroke: var(--verified); }
+  .box.border-blue { stroke: var(--signal); }
+  .box.border-ink { stroke: var(--ink); }
+  .box.border-dashed { stroke-dasharray: 4 4; }
+  .box.fill-coral { fill: var(--coral-500); stroke: none; }
+
+  .group-box {
+    fill: rgba(0,0,0,0.02);
+    stroke: var(--line);
+    stroke-width: 1;
+  }
+  .group-title {
+    font-size: 10px;
+    fill: var(--muted);
+  }
+
+  .box-text {
+    font-size: 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    fill: var(--ink);
+    text-anchor: middle;
+  }
+  .box-text.white { fill: white; }
+  .box-text.small { font-size: 11px; }
+
+  .link {
+    fill: none;
+    stroke: var(--muted);
+    stroke-width: 1.5;
+  }
+
+  @media (max-width: 980px) {
+    .arch-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

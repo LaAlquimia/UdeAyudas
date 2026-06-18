@@ -1,92 +1,58 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import BaseLayout from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
 import Hero from '../components/Hero.astro';
-import FeatureCard from '../components/FeatureCard.astro';
-import GlassCard from '../components/GlassCard.astro';
+import Manifesto from '../components/Manifesto.astro';
+import Modules from '../components/Modules.astro';
+import Architecture from '../components/Architecture.astro';
+import Fuentes from '../components/Fuentes.astro';
+import Rubrica from '../components/Rubrica.astro';
+import Footer from '../components/Footer.astro';
+import TransitionOverlay from '../components/TransitionOverlay.astro';
 ---
 
-<Layout title="UdeAyudas — Asistente de trámites UdeA" description="UdeAyudas: tu agente para los trámites y procesos universitarios de la Universidad de Antioquia" currentPath="/">
-  <Hero />
+<BaseLayout title="UdeAyuda | La norma se vuelve conversación">
+  <Nav />
+  <main>
+    <Hero />
+    <Manifesto />
+    <Modules />
+    <Architecture />
+    <Fuentes />
+    <Rubrica />
+  </main>
+  <Footer />
+  <TransitionOverlay />
+</BaseLayout>
 
-  <div class="container">
-    <section class="section" id="features">
-      <h2 class="section-title">¿Qué puedes consultar?</h2>
+<script>
+  // Intersection Observer for scroll reveals
+  const revealElements = document.querySelectorAll('.reveal');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    root: null,
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px"
+  });
 
-      <div class="features">
-        <FeatureCard icon="📝" title="Matrícula">
-          Fechas, pasos, requisitos y novedades del proceso de matrícula académica en cada semestre.
-        </FeatureCard>
+  revealElements.forEach(el => observer.observe(el));
+</script>
 
-        <FeatureCard icon="📜" title="Certificados y constancias">
-          Cómo solicitar certificados de estudios, constancias de matrícula y otros documentos oficiales.
-        </FeatureCard>
-
-        <FeatureCard icon="🔁" title="Homologaciones">
-          Trámite para reconocer asignaturas cursadas en otras instituciones o programas de la UdeA.
-        </FeatureCard>
-
-        <FeatureCard icon="📅" title="Calendario académico">
-          Fechas clave: inicio de clases, parciales, finales, cancelaciones y grados del periodo vigente.
-        </FeatureCard>
-
-        <FeatureCard icon="💰" title="Becas y apoyos">
-          Información sobre becas, auxilios, estímulos y programas de apoyo socioeconómico universitario.
-        </FeatureCard>
-
-        <FeatureCard icon="🎓" title="Grados">
-          Requisitos, documentación y cronograma para el proceso de grado presencial y a distancia.
-        </FeatureCard>
-
-        <FeatureCard icon="🔄" title="Reingresos y transferencias">
-          Pasos para reingresar, traslado entre programas o transferencias internas y externas.
-        </FeatureCard>
-
-        <FeatureCard icon="💼" title="Prácticas y empleabilidad">
-          Orientación sobre prácticas académicas, profesionales y opciones de la Agencia de Empleabilidad UdeA.
-        </FeatureCard>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2 class="section-title">Cómo funciona</h2>
-
-      <div class="features" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))">
-        <GlassCard class="feature-card" style="text-align:center">
-          <div class="feature-icon">💬</div>
-          <h3>Pregunta</h3>
-          <p>Escríbele al asistente en lenguaje natural, como si fuera un compañero de la U.</p>
-        </GlassCard>
-
-        <GlassCard class="feature-card" style="text-align:center">
-          <div class="feature-icon">🤖</div>
-          <h3>Respuesta al instante</h3>
-          <p>Modelos de IA interpretan tu consulta y entregan una respuesta clara y en español.</p>
-        </GlassCard>
-
-        <GlassCard class="feature-card" style="text-align:center">
-          <div class="feature-icon">🔗</div>
-          <h3>Te orientamos</h3>
-          <p>Recibe enlaces y referencias a los sitios oficiales de la UdeA cuando lo necesites.</p>
-        </GlassCard>
-
-        <GlassCard class="feature-card" style="text-align:center">
-          <div class="feature-icon">🛡️</div>
-          <h3>Privado y seguro</h3>
-          <p>Tu conversación no se almacena. La API key está cifrada en variables de entorno.</p>
-        </GlassCard>
-      </div>
-    </section>
-
-    <section class="section" style="text-align:center; padding-bottom:4rem">
-      <GlassCard style="display:inline-block; padding:2rem 3rem; max-width:620px; margin:0 auto">
-        <h2 class="section-title" style="font-size:1.8rem">¿Listo para resolver tu trámite?</h2>
-        <p style="margin-bottom:1.5rem; color:var(--text-secondary)">
-          El asistente ya está disponible. Cuéntale qué necesitas y te guiamos paso a paso.
-        </p>
-        <a href="/chatbot" class="glass-btn accent">
-          Hablar con UdeAyudas →
-        </a>
-      </GlassCard>
-    </section>
-  </div>
-</Layout>
+<style is:global>
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>

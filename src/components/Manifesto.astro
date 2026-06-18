@@ -1,0 +1,140 @@
+---
+---
+<section id="reto" class="manifesto-section reveal">
+  <div class="content-wrapper">
+    <span class="eyebrow">Misión</span>
+    <h2 class="section-title">
+      El conocimiento más <em class="grad-text">accesible</em> para todos.
+    </h2>
+    <p class="kicker">
+      Las instituciones acumulan cientos de documentos vivos — reglamentos, acuerdos, calendarios, resoluciones. Encontrar una respuesta precisa toma horas. UdeAyuda elimina la fricción: pregunta en lenguaje natural y recibe el artículo exacto que sustenta la respuesta.
+    </p>
+
+    <div class="strikes-grid">
+      <div class="strike-card">
+        <div class="strike-header">
+          <span class="from">PDF de 240 páginas</span>
+          <span class="arrow">→</span>
+          <span class="to">Conversación con cita.</span>
+        </div>
+        <p class="strike-desc">Tu documentación institucional se vuelve consultable en segundos. Deja de buscar palabras clave, empieza a preguntar por contexto.</p>
+      </div>
+
+      <div class="strike-card">
+        <div class="strike-header">
+          <span class="from">Ventanilla y correos</span>
+          <span class="arrow">→</span>
+          <span class="to">Trámite guiado.</span>
+        </div>
+        <p class="strike-desc">Solicitudes, cancelaciones, equivalencias. El agente entiende los requisitos previos, las fechas límite y los documentos necesarios.</p>
+      </div>
+
+      <div class="strike-card">
+        <div class="strike-header">
+          <span class="from">Me parece que</span>
+          <span class="arrow">→</span>
+          <span class="to">Respuesta fundamentada.</span>
+        </div>
+        <p class="strike-desc">Cero alucinaciones. El sistema solo responde con lo que está en la norma pública, proporcionando enlaces directos al documento oficial.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto-section {
+    padding: 6rem 0;
+    background: var(--paper);
+  }
+
+  .content-wrapper {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+  }
+
+  .eyebrow {
+    color: var(--coral-600);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(2.4rem, 4vw, 5rem);
+    margin-bottom: 2rem;
+    max-width: 48rem;
+  }
+
+  .kicker {
+    font-family: 'Source Serif 4', serif;
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    color: var(--body);
+    max-width: 48rem;
+    margin-bottom: 4rem;
+  }
+
+  .strikes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .strike-card {
+    padding: 2.5rem;
+    border-right: 1px solid var(--line);
+  }
+  .strike-card:last-child {
+    border-right: none;
+  }
+
+  .strike-header {
+    margin-bottom: 1rem;
+    font-weight: 500;
+    font-size: 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .from {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--coral-500);
+    text-decoration-thickness: 2px;
+  }
+
+  .arrow {
+    color: var(--line-strong);
+  }
+
+  .to {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .strike-desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 880px) {
+    .strikes-grid {
+      grid-template-columns: 1fr;
+    }
+    .strike-card {
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .strike-card:last-child {
+      border-bottom: none;
+    }
+  }
+</style>

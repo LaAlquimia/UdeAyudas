@@ -1,0 +1,155 @@
+---
+---
+<div id="transition-overlay" class="overlay">
+  <div class="ov-glow ov-glow-1"></div>
+  <div class="ov-glow ov-glow-2"></div>
+  <div class="ov-glow ov-glow-3"></div>
+
+  <div class="overlay-content">
+    <img
+      src="/assets/+Logosímbolo+Universidad+de+Antioquia+horizontal+blanco.png"
+      alt="Universidad de Antioquia"
+      class="overlay-udea-logo"
+    />
+    <div class="overlay-sep"></div>
+    <div class="overlay-brand">UdeAyuda</div>
+    <div class="overlay-progress-wrap">
+      <div class="overlay-progress-bar"></div>
+    </div>
+    <p class="overlay-message">Iniciando agente universitario…</p>
+  </div>
+</div>
+
+<style>
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: #014D29;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(100%);
+    transition: transform 640ms cubic-bezier(0.86, 0, 0.07, 1);
+    overflow: hidden;
+  }
+  .overlay.active {
+    transform: translateY(0);
+  }
+
+  /* Ambient glows */
+  .ov-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+  }
+  .ov-glow-1 {
+    width: 700px; height: 500px;
+    background: rgba(67, 182, 73, 0.30);
+    top: -150px; left: -150px;
+    animation: glowDrift1 7s ease-in-out infinite alternate;
+  }
+  .ov-glow-2 {
+    width: 550px; height: 400px;
+    background: rgba(2, 105, 55, 0.45);
+    bottom: -100px; right: -100px;
+    animation: glowDrift2 9s ease-in-out infinite alternate;
+  }
+  .ov-glow-3 {
+    width: 400px; height: 300px;
+    background: rgba(62, 189, 172, 0.18);
+    top: 40%; left: 55%;
+    animation: glowDrift3 11s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowDrift1 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(70px, 50px) scale(1.18); }
+  }
+  @keyframes glowDrift2 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-50px, -60px) scale(1.12); }
+  }
+  @keyframes glowDrift3 {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-80px, 30px) scale(1.1); }
+  }
+
+  /* Content */
+  .overlay-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .overlay-udea-logo {
+    width: 300px;
+    height: auto;
+    object-fit: contain;
+    opacity: 0.95;
+  }
+
+  .overlay-sep {
+    width: 1px;
+    height: 1.6rem;
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .overlay-brand {
+    font-family: 'Azurio', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.50);
+    letter-spacing: 0.07em;
+    margin-top: -.4rem;
+  }
+
+  .overlay-progress-wrap {
+    width: 240px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-top: .4rem;
+  }
+  .overlay-progress-bar {
+    height: 100%;
+    background: #43B649;
+    border-radius: 1px;
+    width: 0;
+    animation: ovLoad 600ms ease-out forwards;
+  }
+  @keyframes ovLoad {
+    to { width: 100%; }
+  }
+
+  .overlay-message {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.38);
+    letter-spacing: 0.08em;
+    text-transform: lowercase;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const links = document.querySelectorAll('.cta-enter');
+    const overlay = document.getElementById('transition-overlay');
+
+    if (overlay) {
+      links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = (e.currentTarget as HTMLAnchorElement).href;
+          overlay.classList.add('active');
+          setTimeout(() => { window.location.href = target; }, 640);
+        });
+      });
+    }
+  });
+</script>
